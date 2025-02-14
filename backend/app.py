@@ -14,11 +14,7 @@ CORS(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = os.getenv('SQLALCHEMY_TRACK_MODIFICATIONS')
 
-client = OpenAI(
-    api_key='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',
-    organization='org-3xUjBZ856pVdkeLYLikGH7ht',
-    project='proj_82tPsBj3lSEGtrrPZr1aAaTc',
-    ) 
+client = OpenAI() 
 
 db.init_app(app)
 def seeder():
