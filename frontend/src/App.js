@@ -6,7 +6,7 @@ function App() {
   const [question,setQuestion] = useState('');
   const [answer,setAnswer]=useState([]);
   const userQuestion = question?<div class="user-message"><p>{question}</p></div>:'';
-  const botAnswer = answer.length?<div class="chatbot-message"><p>{answer[0].answer}</p></div>:'';
+  const botAnswer = answer.length?<div class="chatbot-message"><p>{answer[0].answer}</p></div>:'Sorry! Couldnot find the answer';
   function onChangeQuestion(e){
     setAnswer([]);
     setQuestion(e.target.value);
