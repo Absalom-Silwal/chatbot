@@ -5,8 +5,9 @@ import { useState } from 'react';
 function App() {
   const [question,setQuestion] = useState('');
   const [answer,setAnswer]=useState([]);
+  const [serverResponse,setServerResponse] = useState(false);
   const userQuestion = question?<div class="user-message"><p>{question}</p></div>:'';
-  const botAnswer = answer.length?<div class="chatbot-message"><p>{answer[0].answer}</p></div>:'Sorry! Couldnot find the answer';
+  const botAnswer = serverResponse?(answer?<div class="chatbot-message"><p>{answer.answer}</p></div>:'Sorry! Couldnot find the answer'):"";
   function onChangeQuestion(e){
     setAnswer([]);
     setQuestion(e.target.value);
@@ -14,6 +15,7 @@ function App() {
 
   function callApi(e){
     e.preventDefault();
+    setServerResponse(false);
     fetch(`http://127.0.0.1:5000/ask`, {
       method: "POST", // HTTP method
       headers: {
@@ -26,7 +28,8 @@ function App() {
         }
         return response.json();
     }).then((data)=>{
-      setAnswer(data.faqs);
+      setServerResponse(true);
+      setAnswer(data);
     })
   }
   return (
