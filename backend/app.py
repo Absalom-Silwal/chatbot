@@ -14,7 +14,9 @@ CORS(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = os.getenv('SQLALCHEMY_TRACK_MODIFICATIONS')
 
-client = OpenAI() 
+client = OpenAI(
+    
+) 
 
 db.init_app(app)
 def seeder():
@@ -35,35 +37,37 @@ with app.app_context():
     seeder()
     
 
-@app.route('/ask',methods=['GET'])
+@app.route('/ask',methods=['POST'])
 def ask():
     try:
-        #data = request.get_json()
-        #question = data.get('question')
-        question = "test?"
+        data = request.get_json()
+        question = data.get('question')
         faq_dict = {}
-        faq = db.session.execute(text("SELECT * FROM faqs WHERE question ILIKE :question LIMIT 1"), {'question': f'%{question}%'}).fetchone()
-        if faq:
+        faq = db.session.execute(text("SELECT *,(TO_CHAR(current_timestamp,'YYYY-MM-DD')::date - TO_CHAR(updated_at,'YYYY-MM-DD')::date) AS days_diff FROM faqs WHERE question ILIKE :question LIMIT 1"), {'question': f'%{question}%'}).fetchone()
+        if (faq and not faq.is_bot_answer) or faq and faq.is_bot_answer and faq.days_diff < 30 :
             faq_dict = {
                 "answer": faq[2]
             }
-            #connect to openai
             return jsonify(faq_dict)
 
         response = client.chat.completions.create(
-            model="gpt-4o",
-            messages=[{"role": "user", "content": "hey"}],
-            stream=True,
+            model="gpt-4o-mini",
+            messages=[{"role": "user", "content": question}],
         )
-        print(response)
+        #print(response.choices[0].message.content)
+        answer = response.choices[0].message.content
+        if faq:
+            faq.answer = answer
+            faq.updated_at = db.func.current_timestamp()
+            db.session.commit()
+        else:
+            new_faq = Faq(question=question,answer=answer,is_bot_answer=1)
+            db.session.add(new_faq)
+            db.session.commit()
+        faq_dict={
+            "answer":answer
+        }
         return jsonify(faq_dict)
-        #faq = Faq(question="How are you?",answer="I am good")
-        #db.session.add(faq)
-        #db.session.commit()
-        #if not faqs:
-         #   faqs = Faq.query.all()
-        #faq_list = [{'id':faq.id,'question':faq.question,'answer':faq.answer} for faq in faqs]
-        #return {'faqs':faq_list}
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
