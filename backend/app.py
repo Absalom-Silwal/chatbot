@@ -3,6 +3,7 @@ from flask import Flask, request, jsonify
 from dotenv import load_dotenv
 from models import db,Faq
 from flask_cors import CORS
+from sqlalchemy import text
 
 
 load_dotenv()
@@ -24,15 +25,13 @@ def ask():
     try:
         data = request.get_json()
         question = data.get('question')
-        db_question = Faq.query.filter(Faq.question.ilike("%{question}%")).first()
-        return {'question':db_question}
-        if db_question:
-            return {'question':db_question}
-        #print(request)
+        faqs = db.session.execute(text("SELECT * FROM faqs WHERE question ILIKE :question LIMIT 1"), {'question': f'%{question}%'})
+      
         #faq = Faq(question="How are you?",answer="I am good")
         #db.session.add(faq)
         #db.session.commit()
-        faqs = Faq.query.all()
+        #if not faqs:
+         #   faqs = Faq.query.all()
         faq_list = [{'id':faq.id,'question':faq.question,'answer':faq.answer} for faq in faqs]
         return {'faqs':faq_list}
     except Exception as e:
