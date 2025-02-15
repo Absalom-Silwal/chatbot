@@ -6,11 +6,15 @@ function App() {
   const [question,setQuestion] = useState('');
   const [answer,setAnswer]=useState([]);
   const [serverResponse,setServerResponse] = useState(false);
-  const userQuestion = question?<div class="user-message"><p>{question}</p></div>:'';
-  const botAnswer = serverResponse?(answer?<div class="chatbot-message"><p>{answer.answer}</p></div>:'Sorry! Couldnot find the answer'):"";
+  //const userQuestion = question?<div class="user-message"><p>{question}</p></div>:'';
+  //const botAnswer = serverResponse?(answer?<div class="chatbot-message"><p>{answer.answer}</p></div>:'Sorry! Couldnot find the answer'):"";
+  let messages = '';
+  messages += question?`<div class="user-message"><p>${question}</p></div>`:''; 
+  messages +=  serverResponse?(answer?`<div class="chatbot-message"><p>${answer.answer}</p></div>`:'Sorry! Couldnot find the answer'):"";
   function onChangeQuestion(e){
     setAnswer([]);
     setQuestion(e.target.value);
+    console.log(messages);
   }
 
   function callApi(e){
@@ -45,9 +49,10 @@ function App() {
                 <p>Ask me anything!</p>
             </div>
 
-            <div class="chat-box" id="chat-box">
-                {userQuestion}
-                {userQuestion?botAnswer:''} 
+            <div class="chat-box" id="chat-box" dangerouslySetInnerHTML={{ __html: messages }}>
+                {/* {userQuestion}
+                {userQuestion?botAnswer:''}  */}
+                
             </div>
 
             <div class="input-container">
