@@ -9,7 +9,7 @@ function App() {
   let [message,setMessage] = useState('');
   //const userQuestion = question?<div class="user-message"><p>{question}</p></div>:'';
   //const botAnswer = serverResponse?(answer?<div class="chatbot-message"><p>{answer.answer}</p></div>:'Sorry! Couldnot find the answer'):"";
-  message += serverResponse?'':(question?`<div class="user-message"><p>${question}</p></div>`:'');
+  message += serverResponse?'':(question?`<div class="chat-message user-message">${question}</div>`:'');
     //setMessage(messageEle);
   function onChangeQuestion(e){
     //setAnswer([]);
@@ -40,7 +40,7 @@ function App() {
     }).then((answer)=>{
       setServerResponse(true);
       //setAnswer(data);
-      const newMessage = `${message}<div class="chatbot-message"><p>${answer.answer}</p></div>`;
+      const newMessage = `${message}<div class="chat-message bot-message" style="align-self: flex-end;">${answer.answer}</div>`;
       setMessage(newMessage);
       setQuestion('');
       document.getElementById('user-input').innerHTML='';
@@ -48,28 +48,32 @@ function App() {
   }
   return (
     <div>
-      <header>
-        <h1>Smart FAQ Chatbot</h1>
-        <p>Ask me anything!</p>
-      </header>
     <form onSubmit={callApi}>
-          <div class="chat-container">
+          {/* <div class="chat-container">
             <div class="chat-header">
                 <h2>FAQ Chatbot</h2>
                 <p>Ask me anything!</p>
             </div>
 
             <div class="chat-box" id="chat-box" dangerouslySetInnerHTML={{ __html: message }}>
-                {/* {userQuestion}
-                {userQuestion?botAnswer:''}  */}
-                
             </div>
 
             <div class="input-container">
             <textarea type="text" id="user-input" value={question} onFocus={onFocusQuestion} onChange={onChangeQuestion} placeholder="Type your question..." ></textarea>
                 <button>Send</button>
             </div>
-        </div>
+          </div> */}
+          <div class="chat-container">
+              <div class="chat-header">FAQ box!</div>
+              <div class="chat-box" id="chatBox" dangerouslySetInnerHTML={{ __html: message }}>
+                {/* <div class="chat-message user-message">hello</div>
+                <div class="chat-message bot-message" style="align-self: flex-end;">This is a bot response.</div> */}
+              </div>
+              <div class="chat-input">
+                  <input type="text" id="user-input" value={question} onFocus={onFocusQuestion} onChange={onChangeQuestion} placeholder="Hello.. I'm listening! Go on.."></input>
+                  <button >▶</button>
+              </div>
+          </div>
 
     </form>
    

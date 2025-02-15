@@ -60,23 +60,23 @@ def ask():
             }
             return jsonify(faq_dict)
         else:
-            # response = client.chat.completions.create(
-            #     model="gpt-4o-mini",
-            #     messages=[{"role": "user", "content": question}],
-            # )
-            # answer = response.choices[0].message.content
-            # if faq and faq.is_bot_answer and faq.days_diff >= 30:
-            #     faq.answer = answer
-            #     faq.is_bot_answer = 1
-            #     faq.updated_at = db.func.current_timestamp()
-            #     db.session.commit()
-            # else:
-            #     new_faq = Faq(question=question,answer=answer,is_bot_answer=1)
-            #     db.session.add(new_faq)
-            #     db.session.commit()
-            # faq_dict={
-            #     "answer":answer
-            # }
+            response = client.chat.completions.create(
+                model="gpt-4o-mini",
+                messages=[{"role": "user", "content": question}],
+            )
+            answer = response.choices[0].message.content
+            if faq and faq.is_bot_answer and faq.days_diff >= 30:
+                faq.answer = answer
+                faq.is_bot_answer = 1
+                faq.updated_at = db.func.current_timestamp()
+                db.session.commit()
+            else:
+                new_faq = Faq(question=question,answer=answer,is_bot_answer=1)
+                db.session.add(new_faq)
+                db.session.commit()
+            faq_dict={
+                "answer":answer
+            }
             return jsonify(faq_dict)      
     except Exception as e:
         return jsonify({"error": str(e)}), 500
