@@ -51,6 +51,8 @@ This project is a smart chatbot designed to provide automated responses to frequ
 2. Install dependencies:
 
    npm install
+   npm install web-vitals
+
  
 3. Start the React development server:
 

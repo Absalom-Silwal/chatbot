@@ -42,11 +42,10 @@ def ask():
     try:
         data = request.get_json()
         question = data.get('question')
-        clean_str = question.lower()
         faq_dict = {}
         faq = db.session.execute(
                     text("SELECT *,(TO_CHAR(current_timestamp,'YYYY-MM-DD')::date - TO_CHAR(updated_at,'YYYY-MM-DD')::date) AS days_diff FROM faqs WHERE to_tsvector('english',question) @@ plainto_tsquery('english',:question) LIMIT 1"),
-                    {'question': clean_str }
+                    {'question': question }
                 ).fetchone()
         print(faq)
         if (faq and not faq.is_bot_answer) :
