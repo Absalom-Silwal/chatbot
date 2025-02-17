@@ -42,13 +42,13 @@ def ask():
     try:
         data = request.get_json()
         question = data.get('question')
-        clean_str = question.replace(' ','').lower()
-        print(clean_str)
+        clean_str = question.lower()
         faq_dict = {}
         faq = db.session.execute(
-                    text("SELECT *,(TO_CHAR(current_timestamp,'YYYY-MM-DD')::date - TO_CHAR(updated_at,'YYYY-MM-DD')::date) AS days_diff FROM faqs WHERE lower(replace(question,' ','')) LIKE :question LIMIT 1"),
-                    {'question': f'%{clean_str}%'}
+                    text("SELECT *,(TO_CHAR(current_timestamp,'YYYY-MM-DD')::date - TO_CHAR(updated_at,'YYYY-MM-DD')::date) AS days_diff FROM faqs WHERE to_tsvector('english',question) @@ plainto_tsquery('english',:question) LIMIT 1"),
+                    {'question': clean_str }
                 ).fetchone()
+        print(faq)
         if (faq and not faq.is_bot_answer) :
             faq_dict = {
                 "answer": faq[2]
@@ -60,22 +60,22 @@ def ask():
             }
             return jsonify(faq_dict)
         else:
-            response = client.chat.completions.create(
-                model="gpt-4o-mini",
-                messages=[{"role": "user", "content": question}],
-            )
-            answer = response.choices[0].message.content
-            if faq and faq.is_bot_answer and faq.days_diff >= 30:
-                faq.answer = answer
-                faq.is_bot_answer = 1
-                faq.updated_at = db.func.current_timestamp()
-                db.session.commit()
-            else:
-                new_faq = Faq(question=question,answer=answer,is_bot_answer=1)
-                db.session.add(new_faq)
-                db.session.commit()
+            # response = client.chat.completions.create(
+            #     model="gpt-4o-mini",
+            #     messages=[{"role": "user", "content": question}],
+            # )
+            # answer = response.choices[0].message.content
+            # if faq and faq.is_bot_answer and faq.days_diff >= 30:
+            #     faq.answer = answer
+            #     faq.is_bot_answer = 1
+            #     faq.updated_at = db.func.current_timestamp()
+            #     db.session.commit()
+            # else:
+            #     new_faq = Faq(question=question,answer=answer,is_bot_answer=1)
+            #     db.session.add(new_faq)
+            #     db.session.commit()
             faq_dict={
-                "answer":answer
+                "answer":''
             }
             return jsonify(faq_dict)      
     except Exception as e:

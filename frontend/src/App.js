@@ -44,30 +44,19 @@ function App() {
       setMessage(newMessage);
       setQuestion('');
       document.getElementById('user-input').innerHTML='';
-    })
+    }).catch((error) => {
+      console.error("There was a problem with the fetch operation:", error);
+      //alert("Failed to fetch response from the server. Please try again later.");
+      const newMessage = `${message}<div class="chat-message bot-message" style="align-self: flex-end;">Sorry! Couldnot Proceed with the request</div>`;
+      setMessage(newMessage);
+    });
   }
   return (
     <div>
     <form onSubmit={callApi}>
-          {/* <div class="chat-container">
-            <div class="chat-header">
-                <h2>FAQ Chatbot</h2>
-                <p>Ask me anything!</p>
-            </div>
-
-            <div class="chat-box" id="chat-box" dangerouslySetInnerHTML={{ __html: message }}>
-            </div>
-
-            <div class="input-container">
-            <textarea type="text" id="user-input" value={question} onFocus={onFocusQuestion} onChange={onChangeQuestion} placeholder="Type your question..." ></textarea>
-                <button>Send</button>
-            </div>
-          </div> */}
           <div class="chat-container">
-              <div class="chat-header">FAQ box!</div>
+              <div class="chat-header">FAQ chat bot!</div>
               <div class="chat-box" id="chatBox" dangerouslySetInnerHTML={{ __html: message }}>
-                {/* <div class="chat-message user-message">hello</div>
-                <div class="chat-message bot-message" style="align-self: flex-end;">This is a bot response.</div> */}
               </div>
               <div class="chat-input">
                   <input type="text" id="user-input" value={question} onFocus={onFocusQuestion} onChange={onChangeQuestion} placeholder="Hello.. I'm listening! Go on.."></input>

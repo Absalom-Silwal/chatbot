@@ -6,7 +6,7 @@ body {
   background-color: #ddd;
 }
 .chat-container {
-  width: 400px;
+  width: 500px;
   background: white;
   border-radius: 10px;
   box-shadow: 2px 2px 10px rgba(0,0,0,0.2);

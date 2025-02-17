@@ -1,9 +1,20 @@
 {
     "seeders":[
-        {"question":"What products/services do you offer?","answer":" We offer a wide range of [products/services], including [list a few key offerings]. Please visit our [website/product page] for more details."},
-        {"question":"How can I place an order?","answer":" To place an order, simply visit our website and browse our [product catalog/service options]. You can add items to your cart and check out securely."},
-        {"question":"How do I track my order?","answer":"Once your order has been shipped, you will receive a tracking number via email. You can track your order status through our [tracking page or partner website]."},
-        {"question":"Do you offer international shipping?","answer":"Yes, we do! We offer international shipping to many countries. Shipping fees and times may vary depending on your location. Please check our [shipping policy] for more details. We offer a wide range of [products/services], including [list a few key offerings]. Please visit our [website/product page] for more details."}
-
+        {
+            "question":"What products/services do you offer",
+            "answer":" We offer a wide range of [products/services], including [list a few key offerings]. Please visit our [website/product page] for more details."
+        },
+        {
+            "question":"How can I place an order",
+            "answer":" To place an order, simply visit our website and browse our [product catalog/service options]. You can add items to your cart and check out securely."
+        },
+        {
+            "question":"How do I track my order",
+            "answer":"Once your order has been shipped, you will receive a tracking number via email. You can track your order status through our [tracking page or partner website]."
+        },
+        {
+            "question":"Do you offer international shipping",
+            "answer":"Yes, we do! We offer international shipping to many countries. Shipping fees and times may vary depending on your location. Please check our [shipping policy] for more details. We offer a wide range of [products/services], including [list a few key offerings]. Please visit our [website/product page] for more details."
+        }
     ]
 }
